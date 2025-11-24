@@ -469,126 +469,118 @@ def main():
                 st.subheader("Detailed Comparison: p=0.3 vs No-Dropout Baseline")
                 st.markdown("Compare dropout p=0.3 (Standard & MC) against the no-dropout baseline")
 
-                # Find p=0.3 result
-                p03_results = [r for r in dropout_results if r['p'] == 0.3]
+                for r in dropout_results:
+                    if len(no_dropout_results) > 0:
+                        no_drop = no_dropout_results[0]
+                        epochs = list(range(1, len(r['train_losses']) + 1))
 
-                if len(p03_results) > 0 and len(no_dropout_results) > 0:
-                    p03 = p03_results[0]
-                    no_drop = no_dropout_results[0]
-                    epochs = list(range(1, len(p03['train_losses']) + 1))
-
-                    # Plot 1: Train Loss Comparison
-                    fig_train = go.Figure()
-                    fig_train.add_trace(go.Scatter(
-                        x=epochs,
-                        y=no_drop['train_losses'],
-                        mode='lines',
-                        name='No Dropout (p=0.0)',
-                        line=dict(color='red', width=2)
-                    ))
-                    fig_train.add_trace(go.Scatter(
-                        x=epochs,
-                        y=p03['train_losses'],
-                        mode='lines',
-                        name='Dropout p=0.3',
-                        line=dict(color='blue', width=2)
-                    ))
-                    fig_train.update_layout(
-                        title="Training Loss: No-Dropout vs Dropout p=0.3",
-                        xaxis_title="Epoch",
-                        yaxis_title="Train Loss",
-                        hovermode='x unified'
-                    )
-                    st.plotly_chart(fig_train, use_container_width=True)
-
-                    # Plot 2: Test Loss Comparison
-                    fig_test = go.Figure()
-                    fig_test.add_trace(go.Scatter(
-                        x=epochs,
-                        y=no_drop['test_losses'],
-                        mode='lines',
-                        name='No Dropout (p=0.0)',
-                        line=dict(color='red', width=2)
-                    ))
-                    fig_test.add_trace(go.Scatter(
-                        x=epochs,
-                        y=p03['test_losses'],
-                        mode='lines',
-                        name='Dropout p=0.3',
-                        line=dict(color='blue', width=2)
-                    ))
-                    fig_test.update_layout(
-                        title="Test Loss: No-Dropout vs Dropout p=0.3",
-                        xaxis_title="Epoch",
-                        yaxis_title="Test Loss",
-                        hovermode='x unified'
-                    )
-                    st.plotly_chart(fig_test, use_container_width=True)
-
-                    # Plot 3: Test Accuracy Comparison (3 methods)
-                    fig_acc = go.Figure()
-                    fig_acc.add_trace(go.Scatter(
-                        x=epochs,
-                        y=no_drop['accs'],
-                        mode='lines',
-                        name='No Dropout (p=0.0)',
-                        line=dict(color='red', width=2, dash='solid')
-                    ))
-                    fig_acc.add_trace(go.Scatter(
-                        x=epochs,
-                        y=p03['accs_det'],
-                        mode='lines',
-                        name='Dropout p=0.3 (Standard)',
-                        line=dict(color='blue', width=2, dash='dash')
-                    ))
-                    fig_acc.add_trace(go.Scatter(
-                        x=epochs,
-                        y=p03['accs_mc'],
-                        mode='lines',
-                        name='Dropout p=0.3 (MC)',
-                        line=dict(color='green', width=2, dash='solid')
-                    ))
-                    fig_acc.update_layout(
-                        title="Test Accuracy: No-Dropout vs Dropout p=0.3 (Standard & MC)",
-                        xaxis_title="Epoch",
-                        yaxis_title="Accuracy",
-                        hovermode='x unified'
-                    )
-                    st.plotly_chart(fig_acc, use_container_width=True)
-
-                    st.markdown("### Final Metrics Comparison")
-                    col1, col2, col3 = st.columns(3)
-
-                    with col1:
-                        st.metric(
-                            "No Dropout (p=0.0)",
-                            f"{no_drop['final_acc']:.4f}",
-                            help="Baseline without regularization"
+                        # Plot 1: Train Loss Comparison
+                        fig_train = go.Figure()
+                        fig_train.add_trace(go.Scatter(
+                            x=epochs,
+                            y=no_drop['train_losses'],
+                            mode='lines',
+                            name='No Dropout (p=0.0)',
+                            line=dict(color='red', width=2)
+                        ))
+                        fig_train.add_trace(go.Scatter(
+                            x=epochs,
+                            y=r['train_losses'],
+                            mode='lines',
+                            name=f'Dropout p={r['p']}',
+                            line=dict(color='blue', width=2)
+                        ))
+                        fig_train.update_layout(
+                            title=f"Training Loss: No-Dropout vs Dropout p={r['p']}",
+                            xaxis_title="Epoch",
+                            yaxis_title="Train Loss",
+                            hovermode='x unified'
                         )
+                        st.plotly_chart(fig_train, use_container_width=True)
 
-                    with col2:
-                        # delta_std = (p03['final_acc_det'] - no_drop['final_acc']) * 100
-                        st.metric(
-                            "Dropout p=0.3 (Standard)",
-                            f"{p03['final_acc_det']:.4f}",
-                            # f"{delta_std:+.2f}%",
-                            help="With dropout regularization"
+                        # Plot 2: Test Loss Comparison
+                        fig_test = go.Figure()
+                        fig_test.add_trace(go.Scatter(
+                            x=epochs,
+                            y=no_drop['test_losses'],
+                            mode='lines',
+                            name='No Dropout (p=0.0)',
+                            line=dict(color='red', width=2)
+                        ))
+                        fig_test.add_trace(go.Scatter(
+                            x=epochs,
+                            y=r['test_losses'],
+                            mode='lines',
+                            name=f'Dropout p={r['p']}',
+                            line=dict(color='blue', width=2)
+                        ))
+                        fig_test.update_layout(
+                            title=f"Test Loss: No-Dropout vs Dropout p={r['p']}",
+                            xaxis_title="Epoch",
+                            yaxis_title="Test Loss",
+                            hovermode='x unified'
                         )
+                        st.plotly_chart(fig_test, use_container_width=True)
 
-                    with col3:
-                        # delta_mc = (p03['final_acc_mc'] - no_drop['final_acc']) * 100
-                        st.metric(
-                            "Dropout p=0.3 (MC)",
-                            f"{p03['final_acc_mc']:.4f}",
-                            # f"{delta_mc:+.2f}%",
-                            help="MC Dropout averaging"
+                        # Plot 3: Test Accuracy Comparison (3 methods)
+                        fig_acc = go.Figure()
+                        fig_acc.add_trace(go.Scatter(
+                            x=epochs,
+                            y=no_drop['accs'],
+                            mode='lines',
+                            name='No Dropout (p=0.0)',
+                            line=dict(color='red', width=2, dash='solid')
+                        ))
+                        fig_acc.add_trace(go.Scatter(
+                            x=epochs,
+                            y=r['accs_det'],
+                            mode='lines',
+                            name=f'Dropout p={r['p']} (Standard)',
+                            line=dict(color='blue', width=2, dash='dash')
+                        ))
+                        fig_acc.add_trace(go.Scatter(
+                            x=epochs,
+                            y=r['accs_mc'],
+                            mode='lines',
+                            name=f'Dropout p={r['p']} (MC)',
+                            line=dict(color='green', width=2, dash='solid')
+                        ))
+                        fig_acc.update_layout(
+                            title=f"Test Accuracy: No-Dropout vs Dropout p={r['p']} (Standard & MC)",
+                            xaxis_title="Epoch",
+                            yaxis_title="Accuracy",
+                            hovermode='x unified'
                         )
+                        st.plotly_chart(fig_acc, use_container_width=True)
 
-                    
-                elif len(p03_results) == 0:
-                    st.warning("No results found for p=0.3. Available p values: " + str([r['p'] for r in dropout_results]))
-                else:
-                    st.warning("No-dropout baseline not found")
+                        st.markdown("### Final Metrics Comparison")
+                        col1, col2, col3 = st.columns(3)
+
+                        with col1:
+                            st.metric(
+                                "No Dropout (p=0.0)",
+                                f"{no_drop['final_acc']:.4f}",
+                                help="Baseline without regularization"
+                            )
+
+                        with col2:
+                            # delta_std = (p03['final_acc_det'] - no_drop['final_acc']) * 100
+                            st.metric(
+                                f"Dropout p={r['p']} (Standard)",
+                                f"{r['final_acc_det']:.4f}",
+                                # f"{delta_std:+.2f}%",
+                                help="With dropout regularization"
+                            )
+
+                        with col3:
+                            # delta_mc = (p03['final_acc_mc'] - no_drop['final_acc']) * 100
+                            st.metric(
+                                f"Dropout p={r['p']} (MC)",
+                                f"{r['final_acc_mc']:.4f}",
+                                # f"{delta_mc:+.2f}%",
+                                help="MC Dropout averaging"
+                            )
+
 
         except FileNotFoundError:
             st.error("Training results not found. Please run main.py first to generate grid_search_results.pkl")
