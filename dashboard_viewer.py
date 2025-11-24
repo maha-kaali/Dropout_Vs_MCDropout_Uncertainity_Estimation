@@ -565,31 +565,24 @@ def main():
                         )
 
                     with col2:
-                        delta_std = (p03['final_acc_det'] - no_drop['final_acc']) * 100
+                        # delta_std = (p03['final_acc_det'] - no_drop['final_acc']) * 100
                         st.metric(
                             "Dropout p=0.3 (Standard)",
                             f"{p03['final_acc_det']:.4f}",
-                            f"{delta_std:+.2f}%",
+                            # f"{delta_std:+.2f}%",
                             help="With dropout regularization"
                         )
 
                     with col3:
-                        delta_mc = (p03['final_acc_mc'] - no_drop['final_acc']) * 100
+                        # delta_mc = (p03['final_acc_mc'] - no_drop['final_acc']) * 100
                         st.metric(
                             "Dropout p=0.3 (MC)",
                             f"{p03['final_acc_mc']:.4f}",
-                            f"{delta_mc:+.2f}%",
+                            # f"{delta_mc:+.2f}%",
                             help="MC Dropout averaging"
                         )
 
-                    # Insights
-                    st.markdown("### Observation")
-                    st.info(f"""
-                    - **Regularization Effect:** Dropout p=0.3 {'improves' if delta_std > 0 else 'reduces'} test accuracy by {abs(delta_std):.2f}% vs no-dropout
-                    - **MC Dropout Benefit:** MC averaging {'improves' if p03['final_acc_mc'] > p03['final_acc_det'] else 'reduces'} accuracy by {abs((p03['final_acc_mc'] - p03['final_acc_det']) * 100):.2f}% vs standard inference
-                    - **Overall Improvement:** MC Dropout p=0.3 {'outperforms' if delta_mc > 0 else 'underperforms'} no-dropout baseline by {abs(delta_mc):.2f}%
-                    """)
-
+                    
                 elif len(p03_results) == 0:
                     st.warning("No results found for p=0.3. Available p values: " + str([r['p'] for r in dropout_results]))
                 else:
