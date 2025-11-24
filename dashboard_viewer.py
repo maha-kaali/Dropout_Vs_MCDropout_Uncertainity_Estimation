@@ -80,7 +80,8 @@ def main():
                 nbins=50,
                 title="Uncertainty Distribution: No Dropout Baseline",
                 opacity=0.6,
-                color_discrete_map={"CIFAR-10": "blue", "SVHN": "red"}
+                color_discrete_map={"CIFAR-10": "blue", "SVHN": "red"},
+                histnorm='probability'
             )
             st.plotly_chart(ood_fig_no, use_container_width=True)
 
@@ -172,7 +173,8 @@ def main():
                 nbins=50,
                 title=f"Uncertainty Distribution: {selected_method} (p={selected_p})",
                 opacity=0.6,
-                color_discrete_map={"CIFAR-10": "blue", "SVHN": "red"}
+                color_discrete_map={"CIFAR-10": "blue", "SVHN": "red"},
+                histnorm='probability'
             )
             st.plotly_chart(ood_fig, use_container_width=True)
 
@@ -296,8 +298,6 @@ def main():
 **Key Insights:**
 - **MC Dropout** typically provides better calibrated uncertainty estimates
 - **Higher dropout rates** (larger p) increase uncertainty but may reduce accuracy
-- **Optimal configuration** balances accuracy and uncertainty quantification
-- Compare configurations to find the best trade-off for your use case
 """)
 
 

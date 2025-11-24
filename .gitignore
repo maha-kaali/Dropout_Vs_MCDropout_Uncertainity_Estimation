@@ -4,3 +4,4 @@ dropout.py
 rough/
 data/
 pickled/*
+!pickled/mc_dropout_epoch100/dashboard_data.pkl
