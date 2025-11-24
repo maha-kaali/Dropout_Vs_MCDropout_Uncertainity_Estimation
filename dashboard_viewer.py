@@ -157,6 +157,8 @@ def main():
 
             subset = df_dropout[(df_dropout["Method"] == selected_method) & (df_dropout["p"] == selected_p)]
 
+            print(df_dropout.head(10))
+
             st.markdown(f"**Configuration:** p={selected_p} (dropout enabled)")
             st.markdown(f"**Method:** {selected_method}")
 
