@@ -47,6 +47,14 @@ train_loader = torch.utils.data.DataLoader(trainset, batch_size=128, shuffle=Tru
 test_loader  = torch.utils.data.DataLoader(testset, batch_size=256, shuffle=False, num_workers=0)
 
 class BaseCIFAR10Model(nn.Module):
+    """
+    Base CIFAR-10 CNN Model Architecture:
+    - Conv1 (3->32) -> ReLU
+    - Conv2 (32->32) -> ReLU -> MaxPool
+    - Flatten
+    - FC3 (8192->512) -> ReLU -> [Dropout here in dropout variant]
+    - FC4 (512->10)
+    """
     def __init__(self):
         super().__init__()
         self.conv1 = nn.Conv2d(3, 32, kernel_size=(3,3), stride=1, padding=1)
@@ -63,15 +71,11 @@ class BaseCIFAR10Model(nn.Module):
 
         self.fc4 = nn.Linear(512, 10)
 
-    def _apply_dropout1(self, x):
-        return x
-
     def _apply_dropout3(self, x):
         return x
 
     def _forward_common(self, x):
         x = self.act1(self.conv1(x))
-        x = self._apply_dropout1(x)
         x = self.act2(self.conv2(x))
         x = self.pool2(x)
         x = self.flat(x)
@@ -81,20 +85,14 @@ class BaseCIFAR10Model(nn.Module):
         return x
 
 class CIFAR10ModelWithDropout(BaseCIFAR10Model):
-    def __init__(self, p1=0.3, p3=0.5):
+    def __init__(self, p=0.5):
         """
         Args:
-            p1: Dropout probability after conv1
-            p3: Dropout probability after fc3
+            p: Dropout probability after fc3 (fully connected layer)
         """
         super().__init__()
-        self.p1 = p1
-        self.p3 = p3
-        self.drop1 = nn.Dropout(p1) 
-        self.drop3 = nn.Dropout(p3)
-
-    def _apply_dropout1(self, x):
-        return self.drop1(x)
+        self.p = p
+        self.drop3 = nn.Dropout(p)
 
     def _apply_dropout3(self, x):
         return self.drop3(x)
@@ -228,10 +226,10 @@ if __name__ == '__main__':
 
         for p in DROPOUT_P_VALUES:
             print(f"\n{'='*60}")
-            print(f"Training with dropout p={p}")
+            print(f"Training with dropout p={p} (after fc3 only)")
             print(f"{'='*60}\n")
 
-            model = CIFAR10ModelWithDropout(p1=p, p3=p).to(device)
+            model = CIFAR10ModelWithDropout(p=p).to(device)
             optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
 
             train_losses, test_losses, accs_det, accs_mc = [], [], [], []
@@ -443,9 +441,9 @@ if __name__ == '__main__':
         is_dropout = result['is_dropout']
 
         if is_dropout:
-            print(f"\nCollecting dashboard data for dropout p={p}...")
-            
-            model = CIFAR10ModelWithDropout(p1=p, p3=p).to(device)
+            print(f"\nCollecting dashboard data for dropout p={p} (after fc3 only)...")
+
+            model = CIFAR10ModelWithDropout(p=p).to(device)
             model.load_state_dict(result['model_state'])
 
             # 1. Standard on CIFAR-10

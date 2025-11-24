@@ -3,7 +3,7 @@ import torch
 import numpy as np
 
 # 1. Define the path to your problematic file
-BAD_FILE_PATH = "pickled/mc_dropout_epoch100/grid_search_results.pkl"
+BAD_FILE_PATH = "pickled/mc_dropout_epoch100/dashboard_data.pkl"
 # BAD_FILE_PATH = "pickled/mc_dropout_epoch100/dashboard_data_lite.pkl" # Uncomment if using the lite version
 
 def to_cpu_numpy(obj):
