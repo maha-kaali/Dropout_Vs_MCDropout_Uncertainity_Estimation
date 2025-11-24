@@ -1,0 +1,6 @@
+dropout.py
+*.ipynb
+*.md
+rough/
+data/
+pickled/*
