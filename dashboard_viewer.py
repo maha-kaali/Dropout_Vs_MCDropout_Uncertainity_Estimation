@@ -487,7 +487,7 @@ def main():
                             x=epochs,
                             y=r['train_losses'],
                             mode='lines',
-                            name=f'Dropout p={r['p']}',
+                            name=f"Dropout p={r['p']}",
                             line=dict(color='blue', width=2)
                         ))
                         fig_train.update_layout(
@@ -511,7 +511,7 @@ def main():
                             x=epochs,
                             y=r['test_losses'],
                             mode='lines',
-                            name=f'Dropout p={r['p']}',
+                            name=f"Dropout p={r['p']}",
                             line=dict(color='blue', width=2)
                         ))
                         fig_test.update_layout(
@@ -535,14 +535,14 @@ def main():
                             x=epochs,
                             y=r['accs_det'],
                             mode='lines',
-                            name=f'Dropout p={r['p']} (Standard)',
+                            name=f"Dropout p={r['p']} (Standard)",
                             line=dict(color='blue', width=2, dash='dash')
                         ))
                         fig_acc.add_trace(go.Scatter(
                             x=epochs,
                             y=r['accs_mc'],
                             mode='lines',
-                            name=f'Dropout p={r['p']} (MC)',
+                            name=f"Dropout p={r['p']} (MC)",
                             line=dict(color='green', width=2, dash='solid')
                         ))
                         fig_acc.update_layout(
