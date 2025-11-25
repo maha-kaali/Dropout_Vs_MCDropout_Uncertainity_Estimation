@@ -8,7 +8,7 @@ import os
 
 st.set_page_config(page_title="MC Dropout Analysis", layout="wide")
 
-# 1. Load Data
+
 DATA_PATH = "pickled/mc_dropout_epoch100/dashboard_data.pkl"
 
 @st.cache_data
@@ -387,7 +387,7 @@ def main():
                     
                     epochs = list(range(1, len(dropout_results[0]['train_losses']) + 1))
 
-                    # Plot 1: Test Loss Comparison
+                    # Test Loss Comparison
                     fig_loss_comp = go.Figure()
 
                     # Add Standard (deterministic) test loss for each p
@@ -409,7 +409,7 @@ def main():
                     )
                     st.plotly_chart(fig_loss_comp, use_container_width=True)
 
-                    # Plot 2: Test Accuracy Comparison - Standard vs MC
+                    # Test Accuracy Comparison - Standard vs MC
                     fig_acc_comp = go.Figure()
 
                     # Add Standard accuracy
@@ -442,7 +442,7 @@ def main():
                     )
                     st.plotly_chart(fig_acc_comp, use_container_width=True)
 
-                    # Plot 3: Train Loss Comparison
+                    # Train Loss Comparison
                     fig_train_comp = go.Figure()
 
                     for result in dropout_results:
@@ -522,7 +522,7 @@ def main():
                         )
                         st.plotly_chart(fig_test, use_container_width=True)
 
-                        # Plot 3: Test Accuracy Comparison (3 methods)
+                        # Test Accuracy Comparison (3 methods)
                         fig_acc = go.Figure()
                         fig_acc.add_trace(go.Scatter(
                             x=epochs,
